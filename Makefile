@@ -10,4 +10,5 @@ Sorter: Sorter.o
 
 clean:
 	-rm -f Sorter.o
+	-rm -f Sorter.h.gch
 	-rm -f Sorter
