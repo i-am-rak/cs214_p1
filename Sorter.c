@@ -38,7 +38,6 @@ int main(int argc, char ** argv){
 			}
 			
 			movies[count].string_row = strdup(buff);
-			*/
 			count++;
 	}
 	
