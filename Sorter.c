@@ -22,5 +22,7 @@ int main(int argc, char ** argv){
 			fprintf(stdout,"%s \n", buff);
 	}
 
+	free(buff);
+	fclose(fp);
 	return 0;
 }
