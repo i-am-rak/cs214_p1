@@ -5,47 +5,58 @@
 #include "Sorter.h"
 
 int main(int argc, char ** argv){
-	//fprintf(stdout,"testing for something\n");
-	FILE* fp;
-	int bufferSize = 100000;
-	char * buff = calloc(1,100000+1);
 
-	fp = fopen(argv[1], "r");
-
-	if(fp == NULL){
-		fprintf(stderr, "ERROR: <File not found>\n");
-		free(buff);
-		return 0;
-	}
-	char * token;
-	int count = 0;
 	int file_count = 0;
 	char c = 0;
+	int i = 0;
+	char * str_file = malloc(10);
+	
 
-	for (c = getc(fp); c != EOF; c = getc(fp)){
-		if(c == '\n')
+	if(stdin == NULL){
+		fprintf(stderr, "ERROR: <File not found>\n");
+		return 0;
+	}
+	
+	c = getc(stdin);
+	while (c != EOF) {
+		//printf("%c\n",c);
+		str_file = (char*)realloc(str_file, (i+1) * sizeof(char));	
+		str_file[i] = c;
+		if(c == '\n'){
 			file_count++;
+		}
+		i++;
+		c = getc(stdin);
+    }
+        
+	str_file[i] = '\0';
+	//fprintf(stdout, "%s\n", str_file);
+	//int avg_str_length = 2 * i / file_count;
+	//char * token = malloc(sizeof(char) * avg_str_length);
+	
+	CSVRow *movies = malloc(file_count * sizeof(CSVRow));
+	//token = strtok(str_file, "\n");
+	for(int j = 0; j < file_count; j++){
+		movies[j].data = malloc(100);
+		movies[j].point = j;
+		movies[j].string_row = malloc(1000);
 	}
-	fclose(fp);
-	fp = fopen(argv[1], "r");
-	
-	CSVRow movies[file_count];
-	
-	while(fgets(buff, bufferSize, (FILE*)fp) != NULL){
+	int temp = 0;
+	int count = 0;
 
-			if(buff[strlen(buff)-1] == '\n'){
-				buff[strlen(buff)-1] = '\0';
-			}
-			
-			movies[count].string_row = strdup(buff);
+	for(int j = 0; j < i; j++){
+		if(str_file[j] == '\n'){
+			//printf("a\n");
+			movies[count].string_row = strndup(str_file+temp,j-temp+1);
+			temp = j+1;
 			count++;
-	}
-	
-	for(int i = 0; i < file_count; i++){
-		fprintf(stdout, "%s \n", movies[i].string_row);
+		}
+		
 	}
 
-	free(buff);
-	fclose(fp);
+	for(int j = 0; j < file_count; j++){
+		fprintf(stdout, "%s", movies[j].string_row);
+	}
+
 	return 0;
 }
