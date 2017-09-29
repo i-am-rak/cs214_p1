@@ -10,18 +10,32 @@ int main(int argc, char ** argv){
 	char c = 0;
 	int i = 0;
 	char * str_file = malloc(10);
+	char * token = malloc(10);
+	int row_position = 0;
 
 	if(stdin == NULL){
 		fprintf(stderr, "ERROR: <No Input In STDIN>\n");
 		return 0;
 	}
-
-	if(stdin
 	
+	if(argv[1] == NULL){
+		fprintf(stderr, "ERROR: <Expected -c \"item\">\n");	
+		return 0;
+	}
+
+	if(argv[1][0] != '-' && argv[1][1] != 'c' && argv[2] == NULL){
+		fprintf(stderr, "ERROR: <Expected -c \"item\">\n");
+		return 0;
+	}
+	
+	token = strdup(argv[2]);
+
+	fprintf(stdout, "%s\n", token);	
+				
 	c = getc(stdin);
 	while (c != EOF) {
 		//printf("%c\n",c);
-		str_file = (char*)realloc(str_file, (i+1) * sizeof(char));	
+		str_file = realloc(str_file, (i+1) * sizeof(char));	
 		str_file[i] = c;
 		if(c == '\n'){
 			file_count++;
@@ -31,9 +45,6 @@ int main(int argc, char ** argv){
     }
         
 	str_file[i] = '\0';
-	//fprintf(stdout, "%s\n", str_file);
-	//int avg_str_length = 2 * i / file_count;
-	//char * token = malloc(sizeof(char) * avg_str_length);
 	
 	CSVRow *movies = malloc(file_count * sizeof(CSVRow));
 	//token = strtok(str_file, "\n");
@@ -44,7 +55,7 @@ int main(int argc, char ** argv){
 	}
 	int temp = 0;
 	int count = 0;
-
+	
 	for(int j = 0; j < i; j++){
 		if(str_file[j] == '\n'){
 			//printf("a\n");
@@ -52,7 +63,6 @@ int main(int argc, char ** argv){
 			temp = j+1;
 			count++;
 		}
-		
 	}
 
 	for(int j = 0; j < file_count; j++){
