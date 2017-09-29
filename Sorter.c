@@ -10,12 +10,13 @@ int main(int argc, char ** argv){
 	char c = 0;
 	int i = 0;
 	char * str_file = malloc(10);
-	
 
 	if(stdin == NULL){
-		fprintf(stderr, "ERROR: <File not found>\n");
+		fprintf(stderr, "ERROR: <No Input In STDIN>\n");
 		return 0;
 	}
+
+	if(stdin
 	
 	c = getc(stdin);
 	while (c != EOF) {
