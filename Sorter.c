@@ -72,7 +72,7 @@ int main(int argc, char ** argv){
 			movies[count].string_row[j-temp+1] = '\0';
 			if (count == 0){
 				c = movies[count].string_row[index];
-				for(index = 0; c != '\0' ; index++){
+				for(index = 0; c != '\n' ; index++){
 					//fprintf(stdout, "%c\n", c);
 					c = movies[count].string_row[index];
 					if(c == ','){
@@ -82,6 +82,8 @@ int main(int argc, char ** argv){
 						}
 						else{
 							strncpy(check_token, movies[count].string_row+p1,index-p1);
+							check_token[index-p1] =  '\0';
+							//fprintf(stdout, "[%s] , [%s]\n", check_token, token);
 						}
 						if(strcmp(check_token,token) == 0){
 							char_found = 1;
@@ -89,6 +91,7 @@ int main(int argc, char ** argv){
 							break;
 						}
 						p1 = index+1;
+						
 					}
 				}
 				if(char_found == 0){
@@ -106,7 +109,7 @@ int main(int argc, char ** argv){
 				index = 0;
 				p1 = 0;
 				c = movies[count].string_row[index];
-				for(index = 0; c != '\0' ; index++){
+				for(index = 0; c != '\n' ; index++){
 					//fprintf(stdout, "%c\n", c);
 					c = movies[count].string_row[index];
 					if(c == ','){
@@ -133,7 +136,7 @@ int main(int argc, char ** argv){
 	}
 
 	for(int j = 0; j < file_count; j++){
-		fprintf(stdout, "[%s] \n", movies[j].data);
+		fprintf(stdout, "[%s],\n %s", movies[j].data, movies[j].string_row);
 	}
 
 	return 0;
