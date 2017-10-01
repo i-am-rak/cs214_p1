@@ -4,6 +4,103 @@
 #include <string.h>
 #include "Sorter.h"
 
+CSVRow* b=NULL;
+
+void merge(int llimit,int mid,int rlimit,CSVRow a[])
+{
+	int ptr1=llimit,ptr2=mid+1;
+	int i;
+	for(i=llimit;ptr1<=mid && ptr2<=rlimit;i++)
+	{
+		char str1[strlen(a[ptr1].data)];
+		char str2[strlen(a[ptr2].data)];
+		int j=0;
+		for(j=0;j<strlen(a[ptr1].data);j++)
+		{
+			str1[j]=tolower(a[ptr1].data[j]);
+		}
+		str1[j]='\0';
+		for(j=0;j<strlen(a[ptr2].data);j++)
+		{
+			str2[j]=tolower(a[ptr2].data[j]);
+		}
+		str2[j]='\0';
+		if(strcmp(str1,str2)==0)
+		{
+			if(a[ptr1].point<a[ptr2].point)
+			{
+				b[i]=a[ptr1];
+				ptr1++;
+			}
+			else
+			{
+				b[i]=a[ptr2];
+				ptr2++;
+			}
+		}
+		if(strcmp(str1,str2)<0)
+		{
+			b[i]=a[ptr1];
+			ptr1++;
+		}
+		else
+		{
+			b[i]=a[ptr2];
+			ptr2++;
+		}
+	}
+	while(ptr1<=mid)
+	{
+		b[i]=a[ptr1];
+		i++;
+		ptr1++;
+	}
+	while(ptr2<=rlimit)
+	{
+		b[i]=a[ptr2];
+		i++;
+		ptr2++;
+	}
+	for(i=llimit;i<=rlimit;i++)
+	{
+		a[i]=b[i];
+	}
+}
+
+void sort(int llimit,int rlimit,CSVRow a[])
+{
+	int mid;
+	if(llimit<rlimit)
+	{
+		mid=(llimit+rlimit)/2;
+		sort(llimit,mid,a);
+		sort(mid+1,rlimit,a);
+		merge(llimit,mid,rlimit,a);
+	}
+	return;
+}
+
+void callMe(int size,CSVRow a[])
+{	
+	int i;
+	b=malloc(sizeof(b)*size);
+	printf("List before sorting\n");
+	for(i=0;i<size;i++)
+	{
+		printf("%s ",a[i].data);
+	}
+	sort(0,size,a);
+	printf("\nList after sorting\n");
+	for(i=0;i<size;i++)
+	{
+		printf("%s ",a[i].data);
+	}
+	printf("\n");
+	free(b);
+	return;
+}
+
+
 int main(int argc, char ** argv){
 
 	int file_count = 0;
