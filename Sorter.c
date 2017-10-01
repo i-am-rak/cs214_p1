@@ -111,17 +111,23 @@ int main(int argc, char ** argv){
 	int row_position = 0;
 
 	if(stdin == NULL){
-		fprintf(stderr, "ERROR: <No Input In STDIN>\n");
+		fprintf(stderr, "ERROR: <No Input In STDIN>\n");	
+		free(token);
+		free(str_file);			
 		return 0;
 	}
 	
 	if(argv[1] == NULL){
 		fprintf(stderr, "ERROR: <Expected -c \"item\">\n");	
+		free(token);
+		free(str_file);
 		return 0;
 	}
 
 	if(argv[1][0] != '-' && argv[1][1] != 'c' && argv[2] == NULL){
 		fprintf(stderr, "ERROR: <Expected -c \"item\">\n");
+		free(token);
+		free(str_file);
 		return 0;
 	}
 	
@@ -151,6 +157,7 @@ int main(int argc, char ** argv){
 		movies[j].point = j;
 		movies[j].string_row = malloc(1000);
 	}
+
 	int temp = 0;
 	int count = 0;
 	int index = 0;
@@ -193,6 +200,11 @@ int main(int argc, char ** argv){
 				}
 				if(char_found == 0){
 					fprintf(stderr, "ERROR: <Selected item was not found in parameters>\n");
+					free(check_token);
+					free(movies);
+					free(token);
+					free(str_file);
+
 					return 0;
 				}
 				//fprintf(stdout,"%d : %d\n",char_found , comma_position_max);
@@ -212,7 +224,7 @@ int main(int argc, char ** argv){
 					if(c == ','){
 						comma_number++;
 						if((index == p1 || index == p1+1) && (comma_number == comma_position_max)){
-							movies[count].data = "NULL";
+							movies[count].data = 0;
 							break;
 						}
 						else if(comma_number == comma_position_max){
@@ -235,6 +247,20 @@ int main(int argc, char ** argv){
 	for(int j = 0; j < file_count; j++){
 		fprintf(stdout, "[%s],\n %s", movies[j].data, movies[j].string_row);
 	}
+	
 
+	
+/*	
+	for(int j = 0; j < file_count; j++){
+		free(movies[j].data);
+		movies[j].point = j;
+		free(movies[j].string_row);
+	}
+*/
+	free(check_token);
+	free(movies);
+	
+	free(token);
+	free(str_file);
 	return 0;
 }
