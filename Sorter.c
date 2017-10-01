@@ -84,19 +84,19 @@ void callMe(int size,CSVRow a[])
 {	
 	int i;
 	b=malloc(sizeof(b)*size);
-	printf("List before sorting\n");
-	for(i=0;i<size;i++)
-	{
-		printf("%s ",a[i].data);
-	}
-	sort(0,size,a);
-	printf("\nList after sorting\n");
-	for(i=0;i<size;i++)
-	{
-		printf("%s ",a[i].data);
-	}
-	printf("\n");
-	free(b);
+//	printf("List before sorting\n");
+//	for(i=0;i<size;i++)
+//	{
+//		printf("%s ",a[i].data);
+//	}
+	sort(1,size,a);
+//	printf("\nList after sorting\n");
+//	for(i=0;i<size;i++)
+//	{
+//		printf("%s ",a[i].data);
+//	}
+//	printf("\n");
+//	free(b);
 	return;
 }
 
