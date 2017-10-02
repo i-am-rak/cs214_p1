@@ -8,8 +8,8 @@ CSVRow* b=NULL;
 
 void mergeInt(int llimit,int mid,int rlimit,CSVRow* a)
 {
-	char str1[1000];
-	char str2[1000];
+	char * str1 = malloc(10000);
+	char * str2 = malloc(10000);
 	int ptr1=llimit,ptr2=mid+1;
 	int i;
 	for(i=llimit;ptr1<=mid && ptr2<=rlimit;i++)
@@ -75,12 +75,14 @@ void mergeInt(int llimit,int mid,int rlimit,CSVRow* a)
 		a[i].point=b[i].point;
 		a[i].string_row=b[i].string_row;
 	}
+	free(str1);
+	free(str2);	
 	return;
 }
 void merge(int llimit,int mid,int rlimit,CSVRow* a)
 {
-	char str1[1000];
-	char str2[1000];
+	char * str1 = malloc(10000);
+	char * str2 = malloc(10000);
 	int ptr1=llimit,ptr2=mid+1;
 	int i;
 	for(i=llimit;ptr1<=mid && ptr2<=rlimit;i++)
@@ -146,6 +148,8 @@ void merge(int llimit,int mid,int rlimit,CSVRow* a)
 		a[i].point=b[i].point;
 		a[i].string_row=b[i].string_row;
 	}
+	free(str1);
+	free(str2);
 	return;
 }
 
@@ -283,6 +287,7 @@ int main(int argc, char ** argv){
 					//fprintf(stdout, "%c\n", c);
 					c = movies[count].string_row[index];
 					if(c == ','){
+
 						comma_position_max++;
 						if(index == p1 || index == p1+1){
 							check_token = "NULL";
@@ -298,7 +303,6 @@ int main(int argc, char ** argv){
 							break;
 						}
 						p1 = index+1;
-						
 					}
 				}
 				if(char_found == 0){
@@ -324,7 +328,48 @@ int main(int argc, char ** argv){
 				for(index = 0; c != '\n' ; index++){
 					//fprintf(stdout, "%c\n", c);
 					c = movies[count].string_row[index];
+					if(c == ',' && index+1 != strlen(movies[count].string_row) && movies[count].string_row[index+1] == '"'){
+							
+						comma_number++;
+						if((index == p1 || index == p1+1) && (comma_number == comma_position_max)){
+							movies[count].data = "0\0";
+							break;
+						}
+						else if(comma_number == comma_position_max){
+							strncpy(movies[count].data, movies[count].string_row+p1,index-p1);
+							//fprintf(stdout, "[%s] , [%s]\n", check_token, token);
+							movies[count].data[index-p1] = '\0';
+							//fprintf(stdout, "%d: %s\n",count, movies[count].data);	
+							break;
+						}
+						p1 = index+1;
+						
+						index = index+2;
+						for(int x = 0; c != '"'; index++){
+							c = movies[count].string_row[index];
+						}	
+						
+						c = movies[count].string_row[index];
+						//fprintf(stdout,"%c\n" , c);
+						comma_number++;
+						if((index == p1 || index == p1+1) && (comma_number == comma_position_max)){
+							movies[count].data = "0\0";
+							break;
+						}
+						else if(comma_number == comma_position_max){
+							strncpy(movies[count].data, movies[count].string_row+p1,index-p1);
+							//fprintf(stdout, "[%s] , [%s]\n", check_token, token);
+							movies[count].data[index-p1] = '\0';
+							//fprintf(stdout, "%d: %s\n",count, movies[count].data);	
+							break;
+						}
+						p1 = index+1;
+						index++;
+						c = movies[count].string_row[index];
+	
+					}
 					if(c == ','){
+						
 						comma_number++;
 						if((index == p1 || index == p1+1) && (comma_number == comma_position_max)){
 							movies[count].data = "0\0";
@@ -359,9 +404,9 @@ int main(int argc, char ** argv){
 		}
 	}
 	printf("%d \n", type);
-	callMe(file_count, movies, type);
+	//callMe(file_count, movies, type);
 	for(int j = 0; j < file_count; j++){
-		//fprintf(stdout, "[%s]\n %s", movies[j].data, movies[j].string_row);
+		fprintf(stdout, "[%s]\n %s", movies[j].data, movies[j].string_row);
 	}
 	
 
@@ -373,6 +418,7 @@ int main(int argc, char ** argv){
 		free(movies[j].string_row);
 	}
 */
+
 	free(check_token);
 	free(movies);
 	
