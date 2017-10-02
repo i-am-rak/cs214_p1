@@ -13,6 +13,77 @@
 
 CSVRow* b=NULL;
 
+void mergeInt(int llimit,int mid,int rlimit,CSVRow* a)
+{
+	char str1[1000];
+	char str2[1000];
+	int ptr1=llimit,ptr2=mid+1;
+	int i;
+	for(i=llimit;ptr1<=mid && ptr2<=rlimit;i++)
+	{
+		int j=0;
+		for(j=0;j<strlen(a[ptr1].data);j++)
+		{
+			str1[j]=tolower(a[ptr1].data[j]);
+		}
+		str1[j]='\0';
+		for(j=0;j<strlen(a[ptr2].data);j++)
+		{
+			str2[j]=tolower(a[ptr2].data[j]);
+		}
+		str2[j]='\0';
+		if(strtol(str1,NULL,10)==strtol(str2,NULL,10))
+		{
+			if(a[ptr1].point<a[ptr2].point)
+			{
+				b[i]=a[ptr1];
+				ptr1++;
+			}
+			else
+			{
+				b[i]=a[ptr2];
+				ptr2++;
+			}
+		}
+		if(strtol(str1,NULL,10)<strtol(str2,NULL,10))
+		{
+			b[i].data=a[ptr1].data;
+			b[i].point=a[ptr1].point;
+			b[i].string_row=a[ptr1].string_row;
+			ptr1++;
+		}
+		else
+		{
+			b[i].data=a[ptr2].data;
+			b[i].point=a[ptr2].point;
+			b[i].string_row=a[ptr2].string_row;
+			ptr2++;
+		}
+	}
+	while(ptr1<=mid)
+	{
+		b[i].data=a[ptr1].data;
+		b[i].point=a[ptr1].point;
+		b[i].string_row=a[ptr1].string_row;	
+		i++;
+		ptr1++;
+	}
+	while(ptr2<=rlimit)
+	{
+		b[i].data=a[ptr2].data;
+		b[i].point=a[ptr2].point;
+		b[i].string_row=a[ptr2].string_row;	
+		i++;
+		ptr2++;
+	}
+	for(i=llimit;i<=rlimit;i++)
+	{
+		a[i].data=b[i].data;
+		a[i].point=b[i].point;
+		a[i].string_row=b[i].string_row;
+	}
+	return;
+}
 void merge(int llimit,int mid,int rlimit,CSVRow* a)
 {
 	char str1[1000];
@@ -85,20 +156,34 @@ void merge(int llimit,int mid,int rlimit,CSVRow* a)
 	return;
 }
 
-void sort(int llimit,int rlimit,CSVRow* a)
+void sort(int llimit,int rlimit,CSVRow* a,short type)
 {
-	int mid;
-	if(llimit<rlimit)
+	if(type==1)
 	{
-		mid=(llimit+rlimit)/2;
-		sort(llimit,mid,a);
-		sort(mid+1,rlimit,a);
-		merge(llimit,mid,rlimit,a);
+		int mid;
+		if(llimit<rlimit)
+		{
+			mid=(llimit+rlimit)/2;
+			sort(llimit,mid,a,type);
+			sort(mid+1,rlimit,a,type);
+			merge(llimit,mid,rlimit,a);
+		}
+	}
+	else
+	{
+		int mid;
+		if(llimit<rlimit)
+		{
+			mid=(llimit+rlimit)/2;
+			sort(llimit,mid,a,type);
+			sort(mid+1,rlimit,a,type);
+			mergeInt(llimit,mid,rlimit,a);
+		}
 	}
 	return;
 }
 
-void callMe(int size,CSVRow* a)
+void callMe(int size,CSVRow* a,short type)
 {	
 	int i;
 	b=malloc(sizeof(CSVRow)*size);
@@ -113,7 +198,7 @@ void callMe(int size,CSVRow* a)
 	{
 		printf("%s ",a[i].data);
 	}
-	sort(0,size-1,a);
+	sort(0,size-1,a,1);
 	printf("\nList after sorting\n");
 	for(i=0;i<size;i++)
 	{
@@ -139,6 +224,6 @@ int main(int argc, char** argv)
 	a[2].data="aa";
 	a[3].data="ab";
 	a[4].data="z";
-	callMe(i,a);
+	callMe(i,a,1);
 	return 0;
 }
