@@ -6,14 +6,85 @@
 
 CSVRow* b=NULL;
 
-void merge(int llimit,int mid,int rlimit,CSVRow a[])
+void mergeInt(int llimit,int mid,int rlimit,CSVRow* a)
 {
+	char str1[1000];
+	char str2[1000];
 	int ptr1=llimit,ptr2=mid+1;
 	int i;
 	for(i=llimit;ptr1<=mid && ptr2<=rlimit;i++)
 	{
-		char str1[strlen(a[ptr1].data)];
-		char str2[strlen(a[ptr2].data)];
+		int j=0;
+		for(j=0;j<strlen(a[ptr1].data);j++)
+		{
+			str1[j]=tolower(a[ptr1].data[j]);
+		}
+		str1[j]='\0';
+		for(j=0;j<strlen(a[ptr2].data);j++)
+		{
+			str2[j]=tolower(a[ptr2].data[j]);
+		}
+		str2[j]='\0';
+		if(strtol(str1,NULL,10)==strtol(str2,NULL,10))
+		{
+			if(a[ptr1].point<a[ptr2].point)
+			{
+				b[i]=a[ptr1];
+				ptr1++;
+			}
+			else
+			{
+				b[i]=a[ptr2];
+				ptr2++;
+			}
+		}
+		if(strtol(str1,NULL,10)<strtol(str2,NULL,10))
+		{
+			b[i].data=a[ptr1].data;
+			b[i].point=a[ptr1].point;
+			b[i].string_row=a[ptr1].string_row;
+			ptr1++;
+		}
+		else
+		{
+			b[i].data=a[ptr2].data;
+			b[i].point=a[ptr2].point;
+			b[i].string_row=a[ptr2].string_row;
+			ptr2++;
+		}
+	}
+	while(ptr1<=mid)
+	{
+		b[i].data=a[ptr1].data;
+		b[i].point=a[ptr1].point;
+		b[i].string_row=a[ptr1].string_row;	
+		i++;
+		ptr1++;
+	}
+	while(ptr2<=rlimit)
+	{
+		b[i].data=a[ptr2].data;
+		b[i].point=a[ptr2].point;
+		b[i].string_row=a[ptr2].string_row;	
+		i++;
+		ptr2++;
+	}
+	for(i=llimit;i<=rlimit;i++)
+	{
+		a[i].data=b[i].data;
+		a[i].point=b[i].point;
+		a[i].string_row=b[i].string_row;
+	}
+	return;
+}
+void merge(int llimit,int mid,int rlimit,CSVRow* a)
+{
+	char str1[1000];
+	char str2[1000];
+	int ptr1=llimit,ptr2=mid+1;
+	int i;
+	for(i=llimit;ptr1<=mid && ptr2<=rlimit;i++)
+	{
 		int j=0;
 		for(j=0;j<strlen(a[ptr1].data);j++)
 		{
@@ -40,63 +111,95 @@ void merge(int llimit,int mid,int rlimit,CSVRow a[])
 		}
 		if(strcmp(str1,str2)<0)
 		{
-			b[i]=a[ptr1];
+			b[i].data=a[ptr1].data;
+			b[i].point=a[ptr1].point;
+			b[i].string_row=a[ptr1].string_row;
 			ptr1++;
 		}
 		else
 		{
-			b[i]=a[ptr2];
+			b[i].data=a[ptr2].data;
+			b[i].point=a[ptr2].point;
+			b[i].string_row=a[ptr2].string_row;
 			ptr2++;
 		}
 	}
 	while(ptr1<=mid)
 	{
-		b[i]=a[ptr1];
+		b[i].data=a[ptr1].data;
+		b[i].point=a[ptr1].point;
+		b[i].string_row=a[ptr1].string_row;	
 		i++;
 		ptr1++;
 	}
 	while(ptr2<=rlimit)
 	{
-		b[i]=a[ptr2];
+		b[i].data=a[ptr2].data;
+		b[i].point=a[ptr2].point;
+		b[i].string_row=a[ptr2].string_row;	
 		i++;
 		ptr2++;
 	}
 	for(i=llimit;i<=rlimit;i++)
 	{
-		a[i]=b[i];
-	}
-}
-
-void sort(int llimit,int rlimit,CSVRow a[])
-{
-	int mid;
-	if(llimit<rlimit)
-	{
-		mid=(llimit+rlimit)/2;
-		sort(llimit,mid,a);
-		sort(mid+1,rlimit,a);
-		merge(llimit,mid,rlimit,a);
+		a[i].data=b[i].data;
+		a[i].point=b[i].point;
+		a[i].string_row=b[i].string_row;
 	}
 	return;
 }
 
-void callMe(int size,CSVRow a[])
+void sort(int llimit,int rlimit,CSVRow* a,short type)
+{
+	if(type==1)
+	{
+		int mid;
+		if(llimit<rlimit)
+		{
+			mid=(llimit+rlimit)/2;
+			sort(llimit,mid,a,type);
+			sort(mid+1,rlimit,a,type);
+			merge(llimit,mid,rlimit,a);
+		}
+	}
+	else
+	{
+		int mid;
+		if(llimit<rlimit)
+		{
+			mid=(llimit+rlimit)/2;
+			sort(llimit,mid,a,type);
+			sort(mid+1,rlimit,a,type);
+			mergeInt(llimit,mid,rlimit,a);
+		}
+	}
+	return;
+}
+
+void callMe(int size,CSVRow* a,short type)
 {	
 	int i;
-	b=malloc(sizeof(b)*size);
-//	printf("List before sorting\n");
-//	for(i=0;i<size;i++)
-//	{
-//		printf("%s ",a[i].data);
-//	}
-	sort(1,size,a);
-//	printf("\nList after sorting\n");
-//	for(i=0;i<size;i++)
-//	{
-//		printf("%s ",a[i].data);
-//	}
-//	printf("\n");
-//	free(b);
+	b=malloc(sizeof(CSVRow)*size);
+	for(i=0;i<size;i++)
+	{
+		b[i].data=malloc(10000);
+		b[i].point=i;
+		b[i].string_row=malloc(10000);
+	}
+	//printf("%d List before sorting\n", size);
+	for(i=0;i<size;i++)
+	{
+		printf("[%s]",a[i].data);
+	}
+	//printf("testing: list ended");
+	sort(0,size-1,a,1);
+	printf("\nList after sorting\n");
+	for(i=0;i<size;i++)
+	{
+		printf("[%s]",a[i].data);
+	}
+	printf("\n");
+	free(b);
 	return;
 }
 
@@ -224,7 +327,7 @@ int main(int argc, char ** argv){
 					if(c == ','){
 						comma_number++;
 						if((index == p1 || index == p1+1) && (comma_number == comma_position_max)){
-							movies[count].data = 0;
+							movies[count].data = " ";
 							break;
 						}
 						else if(comma_number == comma_position_max){
@@ -244,8 +347,9 @@ int main(int argc, char ** argv){
 		}
 	}
 
+	callMe(file_count, movies, 1);
 	for(int j = 0; j < file_count; j++){
-		fprintf(stdout, "[%s],\n %s", movies[j].data, movies[j].string_row);
+		//fprintf(stdout, "[%s]\n %s", movies[j].data, movies[j].string_row);
 	}
 	
 
