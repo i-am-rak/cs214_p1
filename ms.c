@@ -3,7 +3,6 @@
 #include <string.h>
 #include <ctype.h>
 #include "Sorter.h"
-#define max 10
 
 //typedef struct _CSVRow
 //{
@@ -12,70 +11,81 @@
 //	char* string_row;
 //}CSVRow
 
-char** b=NULL;
+CSVRow* b=NULL;
 
-void merge(int llimit,int mid,int rlimit,char* a[])
+void merge(int llimit,int mid,int rlimit,CSVRow* a)
 {
-	char str1[100];
-	char str2[100];
+	char str1[1000];
+	char str2[1000];
 	int ptr1=llimit,ptr2=mid+1;
 	int i;
 	for(i=llimit;ptr1<=mid && ptr2<=rlimit;i++)
 	{
 		int j=0;
-		for(j=0;j<strlen(a[ptr1]);j++)
+		for(j=0;j<strlen(a[ptr1].data);j++)
 		{
-			str1[j]=tolower(a[ptr1][j]);
+			str1[j]=tolower(a[ptr1].data[j]);
 		}
 		str1[j]='\0';
-		for(j=0;j<strlen(a[ptr2]);j++)
+		for(j=0;j<strlen(a[ptr2].data);j++)
 		{
-			str2[j]=tolower(a[ptr2][j]);
+			str2[j]=tolower(a[ptr2].data[j]);
 		}
 		str2[j]='\0';
-		//if(strcmp(str1,str2)==0)
-//		{
-		//	if(a[ptr1].point<a[ptr2].point)
-		//	{
-		//		b[i]=a[ptr1];
-		//		ptr1++;
-		//	}
-		//	else
-		//	{
-		//		b[i]=a[ptr2];
-		//		ptr2++;
-		//	}
-//		}
+		if(strcmp(str1,str2)==0)
+		{
+			if(a[ptr1].point<a[ptr2].point)
+			{
+				b[i]=a[ptr1];
+				ptr1++;
+			}
+			else
+			{
+				b[i]=a[ptr2];
+				ptr2++;
+			}
+		}
 		if(strcmp(str1,str2)<0)
 		{
-			b[i]=a[ptr1];
+			b[i].data=a[ptr1].data;
+			b[i].point=a[ptr1].point;
+			b[i].string_row=a[ptr1].string_row;
 			ptr1++;
 		}
 		else
 		{
-			b[i]=a[ptr2];
+			b[i].data=a[ptr2].data;
+			b[i].point=a[ptr2].point;
+			b[i].string_row=a[ptr2].string_row;
 			ptr2++;
 		}
 	}
 	while(ptr1<=mid)
 	{
-		b[i]=a[ptr1];
+		b[i].data=a[ptr1].data;
+		b[i].point=a[ptr1].point;
+		b[i].string_row=a[ptr1].string_row;	
 		i++;
 		ptr1++;
 	}
 	while(ptr2<=rlimit)
 	{
-		b[i]=a[ptr2];
+		b[i].data=a[ptr2].data;
+		b[i].point=a[ptr2].point;
+		b[i].string_row=a[ptr2].string_row;	
 		i++;
 		ptr2++;
 	}
 	for(i=llimit;i<=rlimit;i++)
 	{
-		a[i]=b[i];
+		a[i].data=b[i].data;
+		a[i].point=b[i].point;
+		a[i].string_row=b[i].string_row;
 	}
+	return;
 }
 
-void sort(int llimit,int rlimit,char* a[])
+void sort(int llimit,int rlimit,CSVRow* a)
 {
 	int mid;
 	if(llimit<rlimit)
@@ -88,30 +98,47 @@ void sort(int llimit,int rlimit,char* a[])
 	return;
 }
 
-char* callMe(int size,char* a[])
+void callMe(int size,CSVRow* a)
 {	
-	CSVRow* help[size-1];
 	int i;
-	printf("List before sorting\n");
-	for(i=0;i<=size;i++)
+	b=malloc(sizeof(CSVRow)*size);
+	for(i=0;i<5;i++)
 	{
-		printf("%s ",a[i]);
+		b[i].data=malloc(1000);
+		b[i].point=i;
+		b[i].string_row=malloc(1000);
 	}
-	sort(0,max,a);
-	printf("\nList after sorting\n");
-	for(i=0;i<=max;i++)
+	printf("List before sorting\n");
+	for(i=0;i<size;i++)
 	{
-		printf("%s ",a[i]);
+		printf("%s ",a[i].data);
+	}
+	sort(0,size-1,a);
+	printf("\nList after sorting\n");
+	for(i=0;i<size;i++)
+	{
+		printf("%s ",a[i].data);
 	}
 	printf("\n");
-	return "-1";
+	free(b);
+	return;
 }
 
 int main(int argc, char** argv)
 {
-	char* a[11] = {"aiu","c","z","l","t","y","b","ab","w","r","i"};
-	b=malloc(sizeof(b)*10);
-	callMe(max,a);
-	free(b);
+	CSVRow* a=malloc(5*sizeof(CSVRow));
+	int i;
+	for(i=0;i<5;i++)
+	{
+		a[i].data=malloc(1000);
+		a[i].point=i;
+		a[i].string_row=malloc(1000);
+	}
+	a[0].data="wq";
+	a[1].data="poa";
+	a[2].data="aa";
+	a[3].data="ab";
+	a[4].data="z";
+	callMe(i,a);
 	return 0;
 }
