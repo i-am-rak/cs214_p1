@@ -327,7 +327,7 @@ int main(int argc, char ** argv){
 					if(c == ','){
 						comma_number++;
 						if((index == p1 || index == p1+1) && (comma_number == comma_position_max)){
-							movies[count].data = " ";
+							movies[count].data = "0\0";
 							break;
 						}
 						else if(comma_number == comma_position_max){
@@ -346,8 +346,20 @@ int main(int argc, char ** argv){
 			count++;
 		}
 	}
+	
+	short type = 0;
 
-	callMe(file_count, movies, 1);
+	for(int j = 1; j < file_count; j++){
+		for( int k = 0; movies[j].data[k] != '\0'; k++){
+			if(!(isdigit(movies[j].data[k]))){
+				if(movies[j].data[k] != '.' || movies[j].data[k] != '-'){
+					type = 1;	
+				}
+			}
+		}
+	}
+	printf("%d \n", type);
+	callMe(file_count, movies, type);
 	for(int j = 0; j < file_count; j++){
 		//fprintf(stdout, "[%s]\n %s", movies[j].data, movies[j].string_row);
 	}
