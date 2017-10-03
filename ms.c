@@ -16,8 +16,8 @@ CSVRow* b=NULL;
 void merge(int llimit,int mid,int rlimit,CSVRow* a)
 {
 	printf("m\n");
-	char str1[1000];
-	char str2[1000];
+	char * str1 = malloc(10000);
+	char * str2 = malloc(10000);
 	int ptr1=llimit,ptr2=mid+1;
 	int i;
 	for(i=llimit;ptr1<=mid && ptr2<=rlimit;i++)
@@ -92,11 +92,13 @@ void merge(int llimit,int mid,int rlimit,CSVRow* a)
 	printf("g\n");
 	for(i=llimit;i<=rlimit;i++)
 	{
-		int j;
 		a[i].point=b[i].point;
-		strncpy(a[i].string_row,b[i].string_row,strlen(a[i].string_row));
+		strncpy(a[i].data,b[i].data, strlen(b[i].data));
+		strncpy(a[i].string_row,b[i].string_row,strlen(b[i].string_row));
 	}
 	printf("h\n");
+	free(str1);
+	free(str2);
 	return;
 }
 
@@ -157,14 +159,14 @@ void callMe(int size,CSVRow* a,short type)
 
 int main(int argc, char** argv)
 {
-	int big=6;
+	int big=7;
 	CSVRow* a=malloc(big*sizeof(CSVRow));
 	int i;
 	for(i=0;i<big;i++)
 	{
-		a[i].data=malloc(1000);
+		a[i].data=malloc(10000);
 		a[i].point=i;
-		a[i].string_row=malloc(1);
+		a[i].string_row=malloc(10000);
 		a[i].string_row="\0";
 	}
 	a[0].data="wq";

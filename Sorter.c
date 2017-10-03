@@ -4,212 +4,67 @@
 #include <string.h>
 #include "Sorter.h"
 
-CSVRow* b=NULL;
-
-void mergeInt(int llimit,int mid,int rlimit,CSVRow* a)
-{
-	char * str1 = malloc(10000);
-	char * str2 = malloc(10000);
-	int ptr1=llimit,ptr2=mid+1;
-	int i;
-	for(i=llimit;ptr1<=mid && ptr2<=rlimit;i++)
-	{
-		int j=0;
-		for(j=0;j<strlen(a[ptr1].data);j++)
-		{
-			str1[j]=tolower(a[ptr1].data[j]);
-		}
-		str1[j]='\0';
-		for(j=0;j<strlen(a[ptr2].data);j++)
-		{
-			str2[j]=tolower(a[ptr2].data[j]);
-		}
-		str2[j]='\0';
-		if(strtol(str1,NULL,10)==strtol(str2,NULL,10))
-		{
-			if(a[ptr1].point<a[ptr2].point)
-			{
-				b[i]=a[ptr1];
-				ptr1++;
-			}
-			else
-			{
-				b[i]=a[ptr2];
-				ptr2++;
-			}
-		}
-		if(strtol(str1,NULL,10)<strtol(str2,NULL,10))
-		{
-			b[i].data=a[ptr1].data;
-			b[i].point=a[ptr1].point;
-			b[i].string_row=a[ptr1].string_row;
-			ptr1++;
-		}
-		else
-		{
-			b[i].data=a[ptr2].data;
-			b[i].point=a[ptr2].point;
-			b[i].string_row=a[ptr2].string_row;
-			ptr2++;
-		}
-	}
-	while(ptr1<=mid)
-	{
-		b[i].data=a[ptr1].data;
-		b[i].point=a[ptr1].point;
-		b[i].string_row=a[ptr1].string_row;	
-		i++;
-		ptr1++;
-	}
-	while(ptr2<=rlimit)
-	{
-		b[i].data=a[ptr2].data;
-		b[i].point=a[ptr2].point;
-		b[i].string_row=a[ptr2].string_row;	
-		i++;
-		ptr2++;
-	}
-	for(i=llimit;i<=rlimit;i++)
-	{
-		a[i].data=b[i].data;
-		a[i].point=b[i].point;
-		a[i].string_row=b[i].string_row;
-	}
-	free(str1);
-	free(str2);	
-	return;
+void transfer(CSVRow *a, CSVRow *b, int k, int c){
+		b[k].data = strdup(a[c].data);
+		b[k].data[strlen(a[c].data)]= '\0';
+		b[k].data = a[c].data;
+		b[k].string_row = strdup(a[c].string_row);
+		b[k].string_row[strlen(a[c].string_row)]= '\0';
+		return;
 }
-void merge(int llimit,int mid,int rlimit,CSVRow* a)
+
+void merge(CSVRow * a, CSVRow * temp, int i1,int j1,int i2,int j2)
 {
-	char * str1 = malloc(10000);
-	char * str2 = malloc(10000);
-	int ptr1=llimit,ptr2=mid+1;
-	int i;
-	for(i=llimit;ptr1<=mid && ptr2<=rlimit;i++)
-	{
-		int j=0;
-		for(j=0;j<strlen(a[ptr1].data);j++)
-		{
-			str1[j]=tolower(a[ptr1].data[j]);
-		}
-		str1[j]='\0';
-		for(j=0;j<strlen(a[ptr2].data);j++)
-		{
-			str2[j]=tolower(a[ptr2].data[j]);
-		}
-		str2[j]='\0';
-		if(strcmp(str1,str2)==0)
-		{
-			if(a[ptr1].point<a[ptr2].point)
-			{
-				b[i]=a[ptr1];
-				ptr1++;
-			}
-			else
-			{
-				b[i]=a[ptr2];
-				ptr2++;
-			}
-		}
-		if(strcmp(str1,str2)<0)
-		{
-			b[i].data=a[ptr1].data;
-			b[i].point=a[ptr1].point;
-			b[i].string_row=a[ptr1].string_row;
-			ptr1++;
-		}
-		else
-		{
-			b[i].data=a[ptr2].data;
-			b[i].point=a[ptr2].point;
-			b[i].string_row=a[ptr2].string_row;
-			ptr2++;
-		}
-	}
-	while(ptr1<=mid)
-	{
-		b[i].data=a[ptr1].data;
-		b[i].point=a[ptr1].point;
-		b[i].string_row=a[ptr1].string_row;	
+	//array used for merging
+    int i,j,k;
+    i=i1;    //beginning of the first list
+    j=i2;    //beginning of the second list
+    k=0;
+ 	//printf("hi\n");   
+    while(i<=j1 && j<=j2)    //while elements in both lists
+    {
+        if(strcmp(a[i].data,a[j].data))
+            transfer(temp,a,k++,i++);
+        else
+            transfer(temp,a,k++,j++);
+    }
+ 	//printf("hi2\n");   
+    while(i<=j1){    //copy remaining elements of the first list
+        //printf("11%d\n", i);
+		k++;
 		i++;
-		ptr1++;
-	}
-	while(ptr2<=rlimit)
-	{
-		b[i].data=a[ptr2].data;
-		b[i].point=a[ptr2].point;
-		b[i].string_row=a[ptr2].string_row;	
-		i++;
-		ptr2++;
-	}
-	for(i=llimit;i<=rlimit;i++)
-	{
-		a[i].data=b[i].data;
-		a[i].point=b[i].point;
-		a[i].string_row=b[i].string_row;
-	}
-	free(str1);
-	free(str2);
+		transfer(temp,a,k,i);
+	}    
+    while(j<=j2) {   //copy remaining elements of the second list
+        //printf("22%d\n", j);
+		k++;
+		j++;
+		transfer(temp,a,k,j);
+    }
+   	//printf("hi3\n"); 
+	//Transfer elements from temp[] back to a[]
+    for(i=i1,j=0;i<=j2;i++,j++)
+        transfer(a,temp,i,j);
+
 	return;
 }
 
-void sort(int llimit,int rlimit,CSVRow* a,short type)
+void mergesort(CSVRow * a, CSVRow * temp, int i,int j)
 {
-	if(type==1)
-	{
-		int mid;
-		if(llimit<rlimit)
-		{
-			mid=(llimit+rlimit)/2;
-			sort(llimit,mid,a,type);
-			sort(mid+1,rlimit,a,type);
-			merge(llimit,mid,rlimit,a);
-		}
-	}
-	else
-	{
-		int mid;
-		if(llimit<rlimit)
-		{
-			mid=(llimit+rlimit)/2;
-			sort(llimit,mid,a,type);
-			sort(mid+1,rlimit,a,type);
-			mergeInt(llimit,mid,rlimit,a);
-		}
-	}
-	return;
-}
-
-void callMe(int size,CSVRow* a,short type)
-{	
-	int i;
-	b=malloc(sizeof(CSVRow)*size);
-	for(i=0;i<size;i++)
-	{
-		b[i].data=malloc(10000);
-		b[i].point=i;
-		b[i].string_row=malloc(10000);
-	}
-	//printf("%d List before sorting\n", size);
-	for(i=0;i<size;i++)
-	{
-		printf("[%s]",a[i].data);
-	}
-	//printf("testing: list ended");
-	sort(0,size-1,a,1);
-	printf("\nList after sorting\n");
-	for(i=0;i<size;i++)
-	{
-		printf("[%s]",a[i].data);
-	}
-	printf("\n");
-	free(b);
+    //printf("hia\n");   
+	int mid;        
+    if(i<j)
+    {
+        mid=(i+j)/2;
+        mergesort(a,temp,i,mid);        //left recursion
+        mergesort(a,temp,mid+1,j);    //right recursion
+        merge(a,temp, i,mid,mid+1,j);    //merging of two sorted sub-arrays
+    }
 	return;
 }
 
 
 int main(int argc, char ** argv){
-
 	int file_count = 0;
 	char c = 0;
 	int i = 0;
@@ -264,6 +119,17 @@ int main(int argc, char ** argv){
 		movies[j].point = j;
 		movies[j].string_row = malloc(1000);
 	}
+
+	
+	CSVRow *tempy = malloc(file_count * sizeof(CSVRow));
+	//token = strtok(str_file, "\n");
+	
+	for(int j = 0; j < file_count; j++){
+		tempy[j].data = malloc(1000);
+		tempy[j].point = j;
+		tempy[j].string_row = malloc(1000);
+	}
+
 
 	int temp = 0;
 	int count = 0;
@@ -404,9 +270,12 @@ int main(int argc, char ** argv){
 		}
 	}
 	printf("%d \n", type);
-	//callMe(file_count, movies, type);
+	
+	mergesort(movies, tempy,0, file_count-2);
+	printf("heyo\n");
 	for(int j = 0; j < file_count; j++){
-		fprintf(stdout, "[%s]\n %s", movies[j].data, movies[j].string_row);
+		fprintf(stdout, "[%s]", movies[j].data);
+		//printf("[%s]\n", movies[j].data);
 	}
 	
 
