@@ -7,6 +7,7 @@
 
 void mergeStr(int llimit,int rlimit,int mid,CSVRow* arr,int size)
 {
+	printf("m\n");
 	int i;
 	int k=0;
 	CSVRow* help=malloc(sizeof(CSVRow)*size);
@@ -81,8 +82,8 @@ void mergeStr(int llimit,int rlimit,int mid,CSVRow* arr,int size)
 	}
 	for(i=0;i<size;i++)
 	{
-		free(help[i].data);
-		free(help[i].string_row);
+//		free(help[i].data);
+//		free(help[i].string_row);
 	}
 	free(help);
 	return;
@@ -164,8 +165,8 @@ void mergeInt(int llimit,int rlimit,int mid,CSVRow* arr,int size)
 	}
 	for(i=0;i<size;i++)
 	{
-		free(help[i].data);
-		free(help[i].string_row);
+//		free(help[i].data);
+//		free(help[i].string_row);
 	}
 	free(help);
 	return;
@@ -173,6 +174,7 @@ void mergeInt(int llimit,int rlimit,int mid,CSVRow* arr,int size)
 
 void sortStr(int llimit,int rlimit,CSVRow* arr,int size)
 {
+	printf("s\n");
 	if(llimit<rlimit)
 	{
 		int mid=(llimit+rlimit)/2;
