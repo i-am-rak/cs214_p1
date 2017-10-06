@@ -283,7 +283,7 @@ int main(int argc, char ** argv){
 			movies[count].string_row[j-temp+1] = '\0';
 			if (count == 0){
 				c = movies[count].string_row[index];
-				for(index = 0; c != '\n' ; index++){
+				for(index = 0; index<strlen(movies[count].string_row) ; index++){
 					//fprintf(stdout, "%c\n", c);
 					c = movies[count].string_row[index];
 					if(c == ',' || movies[count].string_row[index+1] == '\n'){
@@ -310,6 +310,7 @@ int main(int argc, char ** argv){
 						}
 
 					}
+					//printf("%d\n %c",char_found, c);
 				}
 				if(char_found == 0){
 					fprintf(stderr, "ERROR: <Selected item was not found in parameters>\n");
@@ -331,7 +332,7 @@ int main(int argc, char ** argv){
 				index = 0;
 				p1 = 0;
 				c = movies[count].string_row[index];
-				for(index = 0; c != '\n' ; index++){
+				for(index = 0; index<strlen(movies[count].string_row); index++){
 					//fprintf(stdout, "%c\n", c);
 					c = movies[count].string_row[index];
 					if(c == ',' && index+1 != strlen(movies[count].string_row) && movies[count].string_row[index+1] == '"'){
@@ -434,17 +435,19 @@ int main(int argc, char ** argv){
 	//printf("\n\n");
 
 	
-/*	
+
 	for(int j = 0; j < file_count; j++){
 		free(movies[j].data);
-		movies[j].point = j;
+		free(help[j].data);
+		//movies[j].point = j;
 		free(movies[j].string_row);
+		free(help[j].string_row);
 	}
-*/
+
 
 	free(check_token);
 	free(movies);
-	
+	free(help);
 	free(token);
 	free(str_file);
 	return 0;
