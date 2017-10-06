@@ -5,17 +5,9 @@
 #include <stdio.h>
 #include "Sorter.h"
 
-void mergeStr(CSVRow* arr,int i1,int j1,int i2,int j2,int num)
+void mergeStr(CSVRow* arr,CSVRow* help, int i1,int j1,int i2,int j2,int num)
 {
-    CSVRow* help=malloc(sizeof(CSVRow)*num);    //array used for merging
     int i,j,k;
-    for(i=0;i<num;i++)
-    {
-	help[i].data=malloc(100);
-	help[i].point=i;
-	help[i].string_row=malloc(1000);
-    }
-
     i=i1;    //beginning of the first list
     j=i2;    //beginning of the second list
     k=0;
@@ -79,39 +71,39 @@ void mergeStr(CSVRow* arr,int i1,int j1,int i2,int j2,int num)
     for(i=i1,j=0;i<=j2;i++,j++)
     {
         strcpy(arr[i].data,help[j].data);
-	arr[i].point=help[j].point;
-	strcpy(arr[i].string_row,help[i].string_row);
+		arr[i].point=help[j].point;
+		strcpy(arr[i].string_row,help[j].string_row);
     }
-    for(i=0;i<num;i++)
-    {
-	free(help[i].data);
-	free(help[i].string_row);
-    }
-    free(help);
+    //for(i=i1,j=0;i<=j2;i++,j++)
+   // {
+//	free(help[i].data);
+	//free(help[i].string_row);
+ //   }
+//    free(help);
 }
 
-void sortStr(CSVRow* a,int i,int j,int num)
+void sortStr(CSVRow* a,CSVRow *b, int i,int j,int num)
 {
     int mid;
     if(i<j)
     {
         mid=(i+j)/2;
-        sortStr(a,i,mid,num);        //left recursion
-        sortStr(a,mid+1,j,num);    //right recursion
-        mergeStr(a,i,mid,mid+1,j,num);    //merging of two sorted sub-arrays
+        sortStr(a,b,i,mid,num);        //left recursion
+        sortStr(a,b,mid+1,j,num);    //right recursion
+        mergeStr(a,b, i,mid,mid+1,j,num);    //merging of two sorted sub-arrays
     }
 }
 
-void mergeInt(CSVRow* arr,int i1,int j1,int i2,int j2,int num)
+void mergeInt(CSVRow* arr,CSVRow* help, int i1,int j1,int i2,int j2,int num)
 {
-    CSVRow* help=malloc(sizeof(CSVRow)*num);    //array used for merging
+    //CSVRow* help=malloc(sizeof(CSVRow)*num);    //array used for merging
     int i,j,k;
-    for(i=0;i<num;i++)
-    {
-	help[i].data=malloc(100);
-	help[i].point=i;
-	help[i].string_row=malloc(1000);
-    }
+    //for(i=0;i<num;i++)
+    //{
+	//help[i].data=malloc(1000);
+	//help[i].point=i;
+	//help[i].string_row=malloc(1000);
+    //}
 
     i=i1;    //beginning of the first list
     j=i2;    //beginning of the second list
@@ -176,43 +168,44 @@ void mergeInt(CSVRow* arr,int i1,int j1,int i2,int j2,int num)
     for(i=i1,j=0;i<=j2;i++,j++)
     {
         strcpy(arr[i].data,help[j].data);
-	arr[i].point=help[j].point;
-	strcpy(arr[i].string_row,help[i].string_row);
+		arr[i].point=help[j].point;
+		strcpy(arr[i].string_row,help[j].string_row);
     }
-    for(i=0;i<num;i++)
-    {
-	free(help[i].data);
-	free(help[i].string_row);
-    }
-    free(help);
+    //for(i=i1,j=0;i<=j2;i++,j++)
+    //{
+	//free(help[i].data);
+	//free(help[i].string_row);
+    //}
+    //free(help);
 }
 
-void sortInt(CSVRow* a,int i,int j,int num)
+void sortInt(CSVRow* a,CSVRow* b, int i,int j,int num)
 {
     int mid;
     if(i<j)
     {
         mid=(i+j)/2;
-        sortInt(a,i,mid,num);        //left recursion
-        sortInt(a,mid+1,j,num);    //right recursion
-        mergeInt(a,i,mid,mid+1,j,num);    //merging of two sorted sub-arrays
+        sortInt(a,b, i,mid,num);        //left recursion
+        sortInt(a,b, mid+1,j,num);    //right recursion
+        mergeInt(a,b, i,mid,mid+1,j,num);    //merging of two sorted sub-arrays
     }
 }
 
-void callMe(int size,char type,CSVRow* arr)
+void callMe(int size,char type,CSVRow* arr, CSVRow* b)
 {
 	if(type=='i')
 	{
-		sortInt(arr,1,size-1,size);
+		sortInt(arr,b, 1,size-1,size);
 	}
 	else
 	{
-		sortStr(arr,1,size-1,size);
+		sortStr(arr,b, 1,size-1,size);
 	}
 	return;
 }
 
 int main(int argc, char ** argv){
+	
 	int file_count = 0;
 	char c = 0;
 	int i = 0;
@@ -263,20 +256,27 @@ int main(int argc, char ** argv){
 	//token = strtok(str_file, "\n");
 	
 	for(int j = 0; j < file_count; j++){
-		movies[j].data = malloc(1000);
+		movies[j].data = malloc(10000);
 		movies[j].point = j;
-		movies[j].string_row = malloc(1000);
+		movies[j].string_row = malloc(10000);
 	}
 
-	
-	CSVRow *tempy = malloc(file_count * sizeof(CSVRow));
+	CSVRow* help=malloc(sizeof(CSVRow)*file_count);    //array used for merging
+    for(int j =0;j<file_count;j++)
+    {
+	help[j].data=malloc(10000);
+	help[j].point=j;
+	help[j].string_row=malloc(10000);
+    }
+
+	//CSVRow *tempy = malloc(file_count * sizeof(CSVRow));
 	//token = strtok(str_file, "\n");
 	
-	for(int j = 0; j < file_count; j++){
-		tempy[j].data = malloc(1000);
-		tempy[j].point = j;
-		tempy[j].string_row = malloc(1000);
-	}
+	//for(int j = 0; j < file_count; j++){
+	//	tempy[j].data = malloc(1000);
+	//	tempy[j].point = j;
+	//	tempy[j].string_row = malloc(1000);
+	//}
 
 
 	int temp = 0;
@@ -300,11 +300,13 @@ int main(int argc, char ** argv){
 				for(index = 0; c != '\n' ; index++){
 					//fprintf(stdout, "%c\n", c);
 					c = movies[count].string_row[index];
-					if(c == ','){
-
+					if(c == ',' || movies[count].string_row[index+1] == '\n'){
+						if( movies[count].string_row[index+1] == '\n'){
+							index++;
+						}
 						comma_position_max++;
 						if(index == p1 || index == p1+1){
-							check_token = "NULL";
+							check_token = "\0z";
 						}
 						else{
 							strncpy(check_token, movies[count].string_row+p1,index-p1);
@@ -317,6 +319,10 @@ int main(int argc, char ** argv){
 							break;
 						}
 						p1 = index+1;
+						if( movies[count].string_row[index+1] == '\n'){
+							index--;
+						}
+
 					}
 				}
 				if(char_found == 0){
@@ -345,8 +351,8 @@ int main(int argc, char ** argv){
 					if(c == ',' && index+1 != strlen(movies[count].string_row) && movies[count].string_row[index+1] == '"'){
 							
 						comma_number++;
-						if((index == p1 || index == p1+1) && (comma_number == comma_position_max)){
-							movies[count].data = "0\0";
+						if((index == p1) && (comma_number == comma_position_max)){
+							//movies[count].data = "0\0";
 							break;
 						}
 						else if(comma_number == comma_position_max){
@@ -366,8 +372,8 @@ int main(int argc, char ** argv){
 						c = movies[count].string_row[index];
 						//fprintf(stdout,"%c\n" , c);
 						comma_number++;
-						if((index == p1 || index == p1+1) && (comma_number == comma_position_max)){
-							movies[count].data = "0\0";
+						if((index == p1) && (comma_number == comma_position_max)){
+							//movies[count].data = "0\0";
 							break;
 						}
 						else if(comma_number == comma_position_max){
@@ -382,11 +388,15 @@ int main(int argc, char ** argv){
 						c = movies[count].string_row[index];
 	
 					}
-					if(c == ','){
-						
+					if(c == ',' || movies[count].string_row[index+1] == '\n'){
+
+						if( movies[count].string_row[index+1] == '\n'){
+							index++;
+						}
+
 						comma_number++;
-						if((index == p1 || index == p1+1) && (comma_number == comma_position_max)){
-							movies[count].data = "NULL";
+						if((index == p1) && (comma_number == comma_position_max)){
+							//movies[count].data = "NULL";
 							break;
 						}
 						else if(comma_number == comma_position_max){
@@ -397,6 +407,10 @@ int main(int argc, char ** argv){
 							break;
 						}
 						p1 = index+1;
+						if( movies[count].string_row[index+1] == '\n'){
+							index--;
+						}
+
 					}
 				}
 			}
@@ -419,15 +433,15 @@ int main(int argc, char ** argv){
 	}
 	//printf("%d \n", type);
 	//mergesort(movies,1,file_count-1,file_count);
-	callMe(file_count,'s',movies);
+	callMe(file_count,'s',movies,help);
 	//printf("heyo\n");
-	printf("\n");
-	for(int j = 1; j < file_count; j++){
-		fprintf(stdout, "[%s]", movies[j].data);
+	//printf("\n");
+	for(int j = 0; j < file_count; j++){
+		fprintf(stdout, "%s", movies[j].string_row);
 		//printf("[%s]\n", movies[j].data);
 	}
 	
-	printf("\n\n");
+	//printf("\n\n");
 
 	
 /*	
