@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "Sorter.h"
 
-void merge(CSVRow* arr,int i1,int j1,int i2,int j2,int num)
+void mergeStr(CSVRow* arr,int i1,int j1,int i2,int j2,int num)
 {
     CSVRow* help=malloc(sizeof(CSVRow)*num);    //array used for merging
     int i,j,k;
@@ -90,33 +90,128 @@ void merge(CSVRow* arr,int i1,int j1,int i2,int j2,int num)
     free(help);
 }
 
-void mergesort(CSVRow* a,int i,int j,int num)
+void sortStr(CSVRow* a,int i,int j,int num)
 {
     int mid;
-
     if(i<j)
     {
         mid=(i+j)/2;
-        mergesort(a,i,mid,num);        //left recursion
-        mergesort(a,mid+1,j,num);    //right recursion
-        merge(a,i,mid,mid+1,j,num);    //merging of two sorted sub-arrays
+        sortStr(a,i,mid,num);        //left recursion
+        sortStr(a,mid+1,j,num);    //right recursion
+        mergeStr(a,i,mid,mid+1,j,num);    //merging of two sorted sub-arrays
     }
 }
 
-/*
+void mergeInt(CSVRow* arr,int i1,int j1,int i2,int j2,int num)
+{
+    CSVRow* help=malloc(sizeof(CSVRow)*num);    //array used for merging
+    int i,j,k;
+    for(i=0;i<num;i++)
+    {
+	help[i].data=malloc(100);
+	help[i].point=i;
+	help[i].string_row=malloc(1000);
+    }
+
+    i=i1;    //beginning of the first list
+    j=i2;    //beginning of the second list
+    k=0;
+
+    while(i<=j1 && j<=j2)    //while elements in both lists
+    {
+	if(strtof(arr[i].data,NULL)==strtof(arr[j].data,NULL))
+	{
+		if(arr[i].point<arr[j].point)
+		{
+        	    strcpy(help[k].data,arr[i].data);
+        	    help[k].point=arr[i].point;
+        	    strcpy(help[k].string_row,arr[i].string_row);
+        	    k++;
+        	    i++;
+		}
+        	else
+		{
+        	    strcpy(help[k].data,arr[j].data);
+        	    help[k].point=arr[j].point;
+        	    strcpy(help[k].string_row,arr[j].string_row);
+        	    k++;
+        	    j++;
+		}
+	}
+        else if(strtof(arr[i].data,NULL)<strtof(arr[j].data,NULL))
+	{
+            strcpy(help[k].data,arr[i].data);
+            help[k].point=arr[i].point;
+            strcpy(help[k].string_row,arr[i].string_row);
+            k++;
+            i++;
+	}
+        else
+	{
+            strcpy(help[k].data,arr[j].data);
+            help[k].point=arr[j].point;
+            strcpy(help[k].string_row,arr[j].string_row);
+            k++;
+            j++;
+	}
+    }
+
+    while(i<=j1)    //copy remaining elements of the first list
+    {
+            strcpy(help[k].data,arr[i].data);
+            help[k].point=arr[i].point;
+            strcpy(help[k].string_row,arr[i].string_row);
+            k++;
+            i++;
+    }
+    while(j<=j2)    //copy remaining elements of the second list
+    {
+            strcpy(help[k].data,arr[j].data);
+            help[k].point=arr[j].point;
+            strcpy(help[k].string_row,arr[j].string_row);
+            k++;
+            j++;
+    }
+    //Transfer elements from temp[] back to a[]
+    for(i=i1,j=0;i<=j2;i++,j++)
+    {
+        strcpy(arr[i].data,help[j].data);
+	arr[i].point=help[j].point;
+	strcpy(arr[i].string_row,help[i].string_row);
+    }
+    for(i=0;i<num;i++)
+    {
+	free(help[i].data);
+	free(help[i].string_row);
+    }
+    free(help);
+}
+
+void sortInt(CSVRow* a,int i,int j,int num)
+{
+    int mid;
+    if(i<j)
+    {
+        mid=(i+j)/2;
+        sortInt(a,i,mid,num);        //left recursion
+        sortInt(a,mid+1,j,num);    //right recursion
+        mergeInt(a,i,mid,mid+1,j,num);    //merging of two sorted sub-arrays
+    }
+}
+
 void callMe(int size,char type,CSVRow* arr)
 {
 	if(type=='i')
 	{
-		sortInt(0,size-1,arr,size);
+		sortInt(arr,1,size-1,size);
 	}
 	else
 	{
-		sortStr(0,size-1,arr,size);
+		sortStr(arr,1,size-1,size);
 	}
 	return;
 }
-*/
+
 int main(int argc, char ** argv){
 	int file_count = 0;
 	char c = 0;
@@ -291,7 +386,7 @@ int main(int argc, char ** argv){
 						
 						comma_number++;
 						if((index == p1 || index == p1+1) && (comma_number == comma_position_max)){
-							movies[count].data = "0\0";
+							movies[count].data = "NULL";
 							break;
 						}
 						else if(comma_number == comma_position_max){
@@ -322,16 +417,17 @@ int main(int argc, char ** argv){
 			}
 		}
 	}
-	printf("%d \n", type);
-	mergesort(movies,1,file_count-1,file_count);
-	//callMe(file_count-1,'s',movies);
-	printf("heyo\n");
+	//printf("%d \n", type);
+	//mergesort(movies,1,file_count-1,file_count);
+	callMe(file_count,'s',movies);
+	//printf("heyo\n");
+	printf("\n");
 	for(int j = 1; j < file_count; j++){
 		fprintf(stdout, "[%s]", movies[j].data);
 		//printf("[%s]\n", movies[j].data);
 	}
 	
-	printf("\n");
+	printf("\n\n");
 
 	
 /*	
