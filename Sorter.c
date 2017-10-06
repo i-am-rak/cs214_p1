@@ -13,7 +13,7 @@ void merge(CSVRow* arr,int i1,int j1,int i2,int j2,int num)
     {
 	help[i].data=malloc(100);
 	help[i].point=i;
-	help[i].string_row=malloc(10000);
+	help[i].string_row=malloc(1000);
     }
 
     i=i1;    //beginning of the first list
@@ -82,7 +82,7 @@ void merge(CSVRow* arr,int i1,int j1,int i2,int j2,int num)
 	arr[i].point=help[j].point;
 	strcpy(arr[i].string_row,help[i].string_row);
     }
-    for(i=0;i<j2;i++)
+    for(i=0;i<num;i++)
     {
 	free(help[i].data);
 	free(help[i].string_row);
