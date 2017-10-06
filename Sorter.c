@@ -293,7 +293,7 @@ int main(int argc, char ** argv){
 	for(int j = 0; j < i; j++){
 		if(str_file[j] == '\n'){
 			//printf("a\n");
-			movies[count].string_row = strndup(str_file+temp,j-temp+1);
+			strncpy(movies[count].string_row, str_file+temp,j-temp+1);
 			movies[count].string_row[j-temp+1] = '\0';
 			if (count == 0){
 				c = movies[count].string_row[index];
@@ -306,7 +306,7 @@ int main(int argc, char ** argv){
 						}
 						comma_position_max++;
 						if(index == p1 || index == p1+1){
-							check_token = "\0z";
+							check_token = "\0";
 						}
 						else{
 							strncpy(check_token, movies[count].string_row+p1,index-p1);
@@ -420,20 +420,20 @@ int main(int argc, char ** argv){
 		}
 	}
 	
-	short type = 0;
+	char type = 'i';
 
 	for(int j = 1; j < file_count; j++){
 		for( int k = 0; movies[j].data[k] != '\0'; k++){
 			if(!(isdigit(movies[j].data[k]))){
 				if(movies[j].data[k] != '.' || movies[j].data[k] != '-'){
-					type = 1;	
+					type = 's';	
 				}
 			}
 		}
 	}
 	//printf("%d \n", type);
 	//mergesort(movies,1,file_count-1,file_count);
-	callMe(file_count,'s',movies,help);
+	callMe(file_count,type,movies,help);
 	//printf("heyo\n");
 	//printf("\n");
 	for(int j = 0; j < file_count; j++){
