@@ -445,17 +445,19 @@ int main(int argc, char ** argv){
 	//printf("\n\n");
 
 	
-/*	
+
 	for(int j = 0; j < file_count; j++){
 		free(movies[j].data);
-		movies[j].point = j;
+		free(help[j].data);
+		//movies[j].point = j;
 		free(movies[j].string_row);
+		free(help[j].string_row);
 	}
-*/
+
 
 	free(check_token);
 	free(movies);
-	
+	free(help);
 	free(token);
 	free(str_file);
 	return 0;
