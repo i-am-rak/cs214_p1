@@ -175,8 +175,8 @@ void callMe(int size,char type,CSVRow* arr, CSVRow* b)
 
 void trim(char* str)
 {
-	char t[strlen(str)];
-	int i;
+	char * t = malloc(strlen(str)); 
+	int i =0;
 	int j=0;
 	for(i=0;i<strlen(str);i++)
 	{
@@ -188,6 +188,7 @@ void trim(char* str)
 	}
 	t[j]='\0';
 	strcpy(str,t);
+	free(t);
 }
 
 int main(int argc, char ** argv){
@@ -345,7 +346,7 @@ int main(int argc, char ** argv){
 						else if(comma_number == comma_position_max){
 							strncpy(movies[count].data, movies[count].string_row+p1,index-p1);
 							//fprintf(stdout, "[%s] , [%s]\n", check_token, token);
-							movies[count].data[index-p1] = '\0';
+							//movies[count].data[index-p1] = '\0';
 							//fprintf(stdout, "%d: %s\n",count, movies[count].data);	
 							trim(movies[count].data);
 							break;
@@ -367,7 +368,7 @@ int main(int argc, char ** argv){
 						else if(comma_number == comma_position_max){
 							strncpy(movies[count].data, movies[count].string_row+p1,index-p1);
 							//fprintf(stdout, "[%s] , [%s]\n", check_token, token);
-							movies[count].data[index-p1] = '\0';
+							//movies[count].data[index-p1] = '\0';
 							//fprintf(stdout, "%d: %s\n",count, movies[count].data);	
 							trim(movies[count].data);
 							break;
@@ -391,7 +392,7 @@ int main(int argc, char ** argv){
 						else if(comma_number == comma_position_max){
 							strncpy(movies[count].data, movies[count].string_row+p1,index-p1);
 							//fprintf(stdout, "[%s] , [%s]\n", check_token, token);
-							movies[count].data[index-p1] = '\0';
+							//movies[count].data[index-p1] = '\0';
 							//fprintf(stdout, "%d: %s\n",count, movies[count].data);	
 							trim(movies[count].data);
 							break;
@@ -428,8 +429,7 @@ int main(int argc, char ** argv){
 	//printf("\n");
 	for(int j = 0; j < file_count; j++){
 		fprintf(stdout, "%s", movies[j].string_row);
-//		fprintf(stdout, "%s", movies[j].data);
-	//printf("[%s]\n", movies[j].data);
+		//printf("[%s]\n", movies[j].data);
 	}
 	
 	//printf("\n\n");
