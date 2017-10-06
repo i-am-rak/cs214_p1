@@ -5,14 +5,10 @@
 #include <stdio.h>
 #include "Sorter.h"
 
-void mergeStr(CSVRow* arr,CSVRow* help, int i1,int j1,int i2,int j2,int num)
+void mergeStr(CSVRow* arr,CSVRow* help, int lptr,int rptr,int llimit,int rlimit,int num)
 {
-    int i,j,k;
-    i=i1;    //beginning of the first list
-    j=i2;    //beginning of the second list
-    k=0;
-
-    while(i<=j1 && j<=j2)    //while elements in both lists
+    int i=lptr,j=llimit,k=0;
+    while(i<=llimit && j<=rlimit) 
     {
 	if(strcmp(arr[i].data,arr[j].data)==0)
 	{
@@ -51,7 +47,7 @@ void mergeStr(CSVRow* arr,CSVRow* help, int i1,int j1,int i2,int j2,int num)
 	}
     }
 
-    while(i<=j1)    //copy remaining elements of the first list
+    while(i<=rptr)
     {
             strcpy(help[k].data,arr[i].data);
             help[k].point=arr[i].point;
@@ -59,7 +55,7 @@ void mergeStr(CSVRow* arr,CSVRow* help, int i1,int j1,int i2,int j2,int num)
             k++;
             i++;
     }
-    while(j<=j2)    //copy remaining elements of the second list
+    while(j<=rlimit) 
     {
             strcpy(help[k].data,arr[j].data);
             help[k].point=arr[j].point;
@@ -67,19 +63,12 @@ void mergeStr(CSVRow* arr,CSVRow* help, int i1,int j1,int i2,int j2,int num)
             k++;
             j++;
     }
-    //Transfer elements from temp[] back to a[]
-    for(i=i1,j=0;i<=j2;i++,j++)
+    for(i=lptr,j=0;i<=rlimit;i++,j++)
     {
-        strcpy(arr[i].data,help[j].data);
+	        strcpy(arr[i].data,help[j].data);
 		arr[i].point=help[j].point;
 		strcpy(arr[i].string_row,help[j].string_row);
     }
-    //for(i=i1,j=0;i<=j2;i++,j++)
-   // {
-//	free(help[i].data);
-	//free(help[i].string_row);
- //   }
-//    free(help);
 }
 
 void sortStr(CSVRow* a,CSVRow *b, int i,int j,int num)
@@ -88,28 +77,16 @@ void sortStr(CSVRow* a,CSVRow *b, int i,int j,int num)
     if(i<j)
     {
         mid=(i+j)/2;
-        sortStr(a,b,i,mid,num);        //left recursion
-        sortStr(a,b,mid+1,j,num);    //right recursion
-        mergeStr(a,b, i,mid,mid+1,j,num);    //merging of two sorted sub-arrays
+        sortStr(a,b,i,mid,num); 
+        sortStr(a,b,mid+1,j,num);
+        mergeStr(a,b, i,mid,mid+1,j,num); 
     }
 }
 
-void mergeInt(CSVRow* arr,CSVRow* help, int i1,int j1,int i2,int j2,int num)
+void mergeInt(CSVRow* arr,CSVRow* help, int lptr,int rptr,int llimit,int rlimit,int num)
 {
-    //CSVRow* help=malloc(sizeof(CSVRow)*num);    //array used for merging
-    int i,j,k;
-    //for(i=0;i<num;i++)
-    //{
-	//help[i].data=malloc(1000);
-	//help[i].point=i;
-	//help[i].string_row=malloc(1000);
-    //}
-
-    i=i1;    //beginning of the first list
-    j=i2;    //beginning of the second list
-    k=0;
-
-    while(i<=j1 && j<=j2)    //while elements in both lists
+    int i=lptr,j=llimit,k=0;
+    while(i<=rptr && j<=rlimit) 
     {
 	if(strtof(arr[i].data,NULL)==strtof(arr[j].data,NULL))
 	{
@@ -147,8 +124,7 @@ void mergeInt(CSVRow* arr,CSVRow* help, int i1,int j1,int i2,int j2,int num)
             j++;
 	}
     }
-
-    while(i<=j1)    //copy remaining elements of the first list
+    while(i<=rptr) 
     {
             strcpy(help[k].data,arr[i].data);
             help[k].point=arr[i].point;
@@ -156,7 +132,7 @@ void mergeInt(CSVRow* arr,CSVRow* help, int i1,int j1,int i2,int j2,int num)
             k++;
             i++;
     }
-    while(j<=j2)    //copy remaining elements of the second list
+    while(j<=rlimit) 
     {
             strcpy(help[k].data,arr[j].data);
             help[k].point=arr[j].point;
@@ -164,19 +140,12 @@ void mergeInt(CSVRow* arr,CSVRow* help, int i1,int j1,int i2,int j2,int num)
             k++;
             j++;
     }
-    //Transfer elements from temp[] back to a[]
-    for(i=i1,j=0;i<=j2;i++,j++)
+    for(i=lptr,j=0;i<=rlimit;i++,j++)
     {
         strcpy(arr[i].data,help[j].data);
 		arr[i].point=help[j].point;
 		strcpy(arr[i].string_row,help[j].string_row);
     }
-    //for(i=i1,j=0;i<=j2;i++,j++)
-    //{
-	//free(help[i].data);
-	//free(help[i].string_row);
-    //}
-    //free(help);
 }
 
 void sortInt(CSVRow* a,CSVRow* b, int i,int j,int num)
@@ -185,9 +154,9 @@ void sortInt(CSVRow* a,CSVRow* b, int i,int j,int num)
     if(i<j)
     {
         mid=(i+j)/2;
-        sortInt(a,b, i,mid,num);        //left recursion
-        sortInt(a,b, mid+1,j,num);    //right recursion
-        mergeInt(a,b, i,mid,mid+1,j,num);    //merging of two sorted sub-arrays
+        sortInt(a,b, i,mid,num); 
+        sortInt(a,b, mid+1,j,num); 
+        mergeInt(a,b, i,mid,mid+1,j,num); 
     }
 }
 
@@ -202,6 +171,23 @@ void callMe(int size,char type,CSVRow* arr, CSVRow* b)
 		sortStr(arr,b, 1,size-1,size);
 	}
 	return;
+}
+
+void trim(char* str)
+{
+	char t[strlen(str)];
+	int i;
+	int j=0;
+	for(i=0;i<strlen(str);i++)
+	{
+		if(isspace(str[i])==0)
+		{
+			t[j]=str[i];
+			j++;
+		}
+	}
+	t[j]='\0';
+	strcpy(str,t);
 }
 
 int main(int argc, char ** argv){
@@ -360,6 +346,7 @@ int main(int argc, char ** argv){
 							//fprintf(stdout, "[%s] , [%s]\n", check_token, token);
 							movies[count].data[index-p1] = '\0';
 							//fprintf(stdout, "%d: %s\n",count, movies[count].data);	
+							trim(movies[count].data);
 							break;
 						}
 						p1 = index+1;
@@ -381,6 +368,7 @@ int main(int argc, char ** argv){
 							//fprintf(stdout, "[%s] , [%s]\n", check_token, token);
 							movies[count].data[index-p1] = '\0';
 							//fprintf(stdout, "%d: %s\n",count, movies[count].data);	
+							trim(movies[count].data);
 							break;
 						}
 						p1 = index+1;
@@ -404,6 +392,7 @@ int main(int argc, char ** argv){
 							//fprintf(stdout, "[%s] , [%s]\n", check_token, token);
 							movies[count].data[index-p1] = '\0';
 							//fprintf(stdout, "%d: %s\n",count, movies[count].data);	
+							trim(movies[count].data);
 							break;
 						}
 						p1 = index+1;
@@ -438,7 +427,8 @@ int main(int argc, char ** argv){
 	//printf("\n");
 	for(int j = 0; j < file_count; j++){
 		fprintf(stdout, "%s", movies[j].string_row);
-		//printf("[%s]\n", movies[j].data);
+//		fprintf(stdout, "%s", movies[j].data);
+	//printf("[%s]\n", movies[j].data);
 	}
 	
 	//printf("\n\n");
