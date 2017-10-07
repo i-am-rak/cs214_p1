@@ -8,7 +8,7 @@
 void mergeStr(CSVRow* arr,CSVRow* help, int lptr,int rptr,int llimit,int rlimit,int num)
 {
     int i=lptr,j=llimit,k=0;
-    while(i<=llimit && j<=rlimit) 
+    while(i<=rptr && j<=rlimit) 
     {
 	if(strcmp(arr[i].data,arr[j].data)==0)
 	{
@@ -199,7 +199,7 @@ int main(int argc, char ** argv){
 	char * str_file = malloc(10);
 	char * token = malloc(10);
 	int row_position = 0;
-
+	int j;
 	if(stdin == NULL){
 		fprintf(stderr, "ERROR: <No Input In STDIN>\n");	
 		free(token);
@@ -242,14 +242,14 @@ int main(int argc, char ** argv){
 	CSVRow *movies = malloc(file_count * sizeof(CSVRow));
 	//token = strtok(str_file, "\n");
 	
-	for(int j = 0; j < file_count; j++){
+	for(j = 0; j < file_count; j++){
 		movies[j].data = malloc(10000);
 		movies[j].point = j;
 		movies[j].string_row = malloc(10000);
 	}
 
 	CSVRow* help=malloc(sizeof(CSVRow)*file_count);    //array used for merging
-    for(int j =0;j<file_count;j++)
+    for(j =0;j<file_count;j++)
     {
 	help[j].data=malloc(10000);
 	help[j].point=j;
@@ -277,7 +277,7 @@ int main(int argc, char ** argv){
 	char * check_token = malloc(1000);
 	c = 0;
 
-	for(int j = 0; j < i; j++){
+	for(j = 0; j < i; j++){
 		if(str_file[j] == '\n'){
 			//printf("a\n");
 			strncpy(movies[count].string_row, str_file+temp,j-temp+1);
@@ -354,7 +354,8 @@ int main(int argc, char ** argv){
 						p1 = index+1;
 						
 						index = index+2;
-						for(int x = 0; c != '"'; index++){
+						int x;
+						for(x = 0; c != '"'; index++){
 							c = movies[count].string_row[index];
 						}	
 						
@@ -412,9 +413,9 @@ int main(int argc, char ** argv){
 	}
 	
 	char type = 'i';
-
-	for(int j = 1; j < file_count; j++){
-		for( int k = 0; movies[j].data[k] != '\0'; k++){
+	int k;
+	for(j = 1; j < file_count; j++){
+		for(k = 0; movies[j].data[k] != '\0'; k++){
 			if(!(isdigit(movies[j].data[k]))){
 				if(movies[j].data[k] != '.' || movies[j].data[k] != '-'){
 					type = 's';	
@@ -427,7 +428,7 @@ int main(int argc, char ** argv){
 	callMe(file_count,type,movies,help);
 	//printf("heyo\n");
 	//printf("\n");
-	for(int j = 0; j < file_count; j++){
+	for(j = 0; j < file_count; j++){
 		fprintf(stdout, "%s", movies[j].string_row);
 		//printf("[%s]\n", movies[j].data);
 	}
@@ -436,7 +437,7 @@ int main(int argc, char ** argv){
 
 	
 
-	for(int j = 0; j < file_count; j++){
+	for(j = 0; j < file_count; j++){
 		free(movies[j].data);
 		free(help[j].data);
 		//movies[j].point = j;
